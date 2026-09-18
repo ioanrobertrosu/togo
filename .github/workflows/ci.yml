@@ -59,6 +59,9 @@ jobs:
           name: build
           path: bin/
 
+      - name: execution permissions
+        run: chmod +x bin/togo.exe
+
       - name: Execute help command
         run: ./bin/togo.exe --help
 
