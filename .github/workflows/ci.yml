@@ -1,0 +1,64 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v7.0.0
+
+      - name: Run Integration Tests
+        run: go test ./...
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-go@v7.0.0
+
+      - name: Build Project
+        run: go build -o main.exe
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: build
+          path: main.exe
+
+  summary:
+    needs: [test, build]
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v3.1.0
+        with:
+          name: build
+          path: main.exe
+
+      - name: Execute help command
+        run: ./main.exe --help
+
+      - name: Print Summary
+        run: |
+          echo "======= CI STATUS ======="
+          echo "Test:             ${{needs.test.result}}"
+          echo "Build:            ${{needs.build.result}}"
+        
