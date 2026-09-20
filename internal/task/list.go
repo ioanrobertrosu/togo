@@ -157,7 +157,7 @@ func (tl *TaskList) Load() error {
 }
 
 func (tl TaskList) GetNextTaskID() int {
-	if len(tl.Tasks) == 0 {
+	if len(tl.Tasks) <= 0 {
 		return 1
 	}
 
