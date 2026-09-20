@@ -19,7 +19,7 @@ func TestToTaskIdLessOrEqualToZero(t *testing.T) {
 	tl := TaskList{
 		Tasks: []Task{
 			{
-				ID: -2,
+				ID: -3,
 				Text: "task 1",
 				Completed: true,
 			},
@@ -39,6 +39,6 @@ func TestToTaskIdLessOrEqualToZero(t *testing.T) {
 	}
 
 	if errCount != 3 {
-		t.Errorf("expected 3 errors, go %d", errCount)
+		t.Errorf("expected 3 errors, got %d", errCount)
 	}
 }
